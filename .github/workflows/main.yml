@@ -2,9 +2,11 @@ name: Daily Commit Workflow
 
 on:
   schedule:
-    # Runs every day at 09:30 UTC (you can change hour/minute if needed)
-    - cron: "30 9 * * *"
-  workflow_dispatch: # allows manual trigger too
+    - cron: "30 9 * * *" # runs daily 9:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   daily-commit:
@@ -21,4 +23,4 @@ jobs:
           git config user.email "25ds2000019@ds.study.iitm.ac.in"
           git add last_run.txt
           git commit -m "Automated daily commit: $(date -u)" || echo "No changes to commit"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
